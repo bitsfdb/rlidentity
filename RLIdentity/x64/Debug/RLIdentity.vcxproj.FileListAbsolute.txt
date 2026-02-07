@@ -1,0 +1,2 @@
+E:\projects\Rocket League\RLIdentityDLL\x64\Debug\minhook.x64d.dll
+E:\projects\Rocket League\RLIdentityDLL\RLIdentity\x64\Debug\RLIdenti.F1359A32.Up2Date
