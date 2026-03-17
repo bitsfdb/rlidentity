@@ -1,1 +1,43 @@
+# Visual Studio
 .vs/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+*.pdb
+*.obj
+*.exe
+*.dll
+*.iobj
+*.ipdb
+*.log
+*.tlog
+*.lastbuildstate
+*.recipe
+*.idb
+*.cache
+*.vsidx
+*.VC.db
+
+# CLion / CMake
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+build/
+.cmake/
+
+# Idea
+.idea/
+
+# NuGet
+packages/
+*.nuget.props
+*.nuget.targets
+project.assets.json
+project.nuget.cache
+
+# Submodules
+GUI/
+RLIdentity/RLidentity/

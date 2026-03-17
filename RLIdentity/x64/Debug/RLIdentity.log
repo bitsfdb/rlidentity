@@ -1,2 +1,0 @@
-﻿  RLIdentity.cpp
-LINK : fatal error LNK1104: cannot open file 'MinHook.x64.lib'
