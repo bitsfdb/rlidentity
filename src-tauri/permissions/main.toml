@@ -1,0 +1,17 @@
+[default]
+description = "Default permissions for my application"
+permissions = [
+    "allow-main-commands"
+]
+
+[[permission]]
+identifier = "allow-main-commands"
+description = "Allows all main commands"
+commands.allow = [
+    "minimize_to_tray",
+    "save_config",
+    "inject_dll",
+    "validate_key",
+    "check_status",
+    "get_hwid"
+]
