@@ -6,7 +6,7 @@ RLidentity is a modern, high-performance identity management tool for Rocket Lea
 
 ![App Logo](public/rlidentity.webp)
 
-## ✨ Features
+## Features
 
 *   **Identity Spoofing**: Change your in-game name and platform identity on the fly.
 *   **Dual Platform Support**: Seamlessly switch between **Epic Games** and **Steam**.
@@ -14,14 +14,14 @@ RLidentity is a modern, high-performance identity management tool for Rocket Lea
 *   **Auto-Sync System**: The GUI automatically stays up-to-date by syncing the latest `injector.exe` and `RLIdentity.dll` directly from Gitea.
 *   **Modern UI**: High-performance, transparent "Acrylic" interface with interactive tutorials and a built-in log viewer.
 
-## 🚀 Installation (First Time Users)
+## Installation (First Time Users)
 
 1.  Navigate to the [Releases](https://git.rlidentity.me/bits/RLidentity/releases) page on Gitea.
 2.  Download the latest `rlidentitygui_x.x.x_x64-setup.exe`.
 3.  Run the installer.
 4.  **Launch RLidentity**: On first launch, the app will automatically download the necessary core assets (`injector.exe` and `RLIdentity.dll`) to your `AppData/RLidentity` folder.
 
-## 🛠️ Developer Setup
+## Developer Setup
 
 This repository uses a multi-branch structure to keep the codebase clean:
 
@@ -38,13 +38,13 @@ npx tauri build
 ### Building the DLL
 The DLL and Injector are built using Visual Studio 2022 (v143 toolset). Ensure `MinHook` is correctly linked for the identity hooking logic.
 
-## 👥 Credits & Debug
+## Credits & Debug
 
 *   **Lead Dev & Owner**: Bits
 *   **Dev & Admin**: Danni
 *   **Co-Owner**: Deniz
 *   **Administrator**: Kairo
-*   **Helpers**: Quinn, SNDR
+*   **Helpers**: Quinn, sndr
 *   **Tester**: Emir
 
 ## 🔗 Links
