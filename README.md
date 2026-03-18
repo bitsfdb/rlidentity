@@ -2,7 +2,7 @@
 
 > **Be anyone, Win everything.**
 
-RLidentity is a modern, high-performance identity management tool for Rocket League. It features a sleek, glass-morphism GUI built with Tauri and React, backed by a powerful C++ injection system.
+RLidentity is a modern, high-performance Name Spoofing tool for Rocket League. It features a sleek, glass-morphism GUI built with Tauri and React, backed by a powerful C++ injection system.
 
 ![App Logo](https://cdn.discordapp.com/icons/1470914465515049083/88f78baaa66b440109a59a7999951cd8.webp?size=256)
 
