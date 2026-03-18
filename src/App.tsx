@@ -120,8 +120,23 @@ export default function App() {
     if (initialApiKey) {
       authorize(initialApiKey);
     }
-    checkForUpdates();
+    syncAssetsAndCheckUpdates();
   }, []);
+
+  async function syncAssetsAndCheckUpdates() {
+    if (!isTauriRuntime()) return;
+    
+    // 1. Download DLL and Injector
+    try {
+      await tryInvoke("download_assets");
+      console.log("Assets synced successfully");
+    } catch (e) {
+      console.error("Failed to sync assets:", e);
+    }
+
+    // 2. Check for App updates
+    checkForUpdates();
+  }
 
   async function checkForUpdates() {
     if (!isTauriRuntime()) return;

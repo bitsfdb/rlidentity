@@ -144,9 +144,35 @@ async fn check_status() -> Status {
 }
 
 #[tauri::command]
+async fn download_assets() -> Result<(), String> {
+    let mut path = dirs::data_dir().ok_or("Could not find AppData")?;
+    path.push("RLidentity");
+    fs::create_dir_all(&path).map_err(|e| e.to_string())?;
+
+    let client = reqwest::Client::new();
+    let assets = [
+        ("injector.exe", "https://git.rlidentity.me/bits/RLidentity/raw/branch/dll/injector.exe"),
+        ("RLIdentity.dll", "https://git.rlidentity.me/bits/RLidentity/raw/branch/dll/RLIdentity.dll"),
+    ];
+
+    for (name, url) in assets {
+        let mut file_path = path.clone();
+        file_path.push(name);
+        
+        let response = client.get(url).send().await.map_err(|e| e.to_string())?;
+        let bytes = response.bytes().await.map_err(|e| e.to_string())?;
+        fs::write(file_path, bytes).map_err(|e| e.to_string())?;
+    }
+    Ok(())
+}
+
+#[tauri::command]
 async fn inject_dll(_discordId: Option<String>) -> Result<String, String> {
-    let injector_path = "E:\\projects\\Rocket League\\RLIdentityDLL\\x64\\Release\\injector.exe";
-    let dll_path = "E:\\projects\\Rocket League\\RLIdentityDLL\\x64\\Release\\RLIdentity.dll";
+    let mut base_path = dirs::data_dir().ok_or("Could not find AppData")?;
+    base_path.push("RLidentity");
+    
+    let injector_path = base_path.join("injector.exe");
+    let dll_path = base_path.join("RLIdentity.dll");
     
     let mut s = System::new_all();
     s.refresh_processes();
@@ -154,11 +180,8 @@ async fn inject_dll(_discordId: Option<String>) -> Result<String, String> {
         return Err("Rocket League is not running!".into());
     }
 
-    if !Path::new(injector_path).exists() {
-        return Err(format!("Injector missing: {}", injector_path));
-    }
-    if !Path::new(dll_path).exists() {
-        return Err(format!("DLL missing: {}", dll_path));
+    if !injector_path.exists() || !dll_path.exists() {
+        return Err("Required files missing. Please wait for update to finish.".into());
     }
 
     // Run the injector and capture FULL output
@@ -192,7 +215,8 @@ pub fn run() {
             inject_dll,
             validate_key,
             check_status,
-            get_hwid
+            get_hwid,
+            download_assets
         ])
         .setup(|app| {
             let icon_bytes = include_bytes!("../icons/32x32.png");
