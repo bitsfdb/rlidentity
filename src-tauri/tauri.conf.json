@@ -22,9 +22,10 @@
         "devtools": true
       }
     ],
-    "security": {
-      "csp": null
-    }
+"security": {
+  "csp": "default-src 'self'; connect-src 'self' https://api.rlidentity.me https://git.rlidentity.me"
+}
+
   },
   "plugins": {
     "updater": {
