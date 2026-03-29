@@ -26,15 +26,15 @@ interface KeyValidationResponse {
 }
 
 const LS_KEYS = {
-  spoofed: "neonGlass.spoofedUsername",
-  apiKey: "neonGlass.apiKey",
-  minimizeToTray: "neonGlass.minimizeToTray",
-  platform: "neonGlass.platform",
-  autoInject: "neonGlass.autoInject",
+  spoofed: "rlidentity.spoofedUsername",
+  apiKey: "rlidentity.apiKey",
+  minimizeToTray: "rlidentity.minimizeToTray",
+  platform: "rlidentity.platform",
+  autoInject: "rlidentity.autoInject",
 } as const;
 
-const GITHUB_URL = "https://github.com/RLidentity";
-const FAQ_URL = "https://rlidentity.me/faq";
+const GITHUB_URL = "https://git.rlidentity.me/bits/rlidentity";
+const FAQ_URL = "https://rlidentity.me/#faq";
 
 function isTauriRuntime() {
   return typeof window !== "undefined" && typeof (window as any).__TAURI_INTERNALS__ !== "undefined";
