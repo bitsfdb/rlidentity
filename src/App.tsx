@@ -200,7 +200,7 @@ export default function App() {
     setStatus("validating key...");
     setIsRevoked(false);
     try {
-        const hwid = await tryInvoke<string>("get_hwid") || "UNKNOWN";
+        const hwid = await tryInvoke<string>("get_hwid") || "UNKNOWN-HWID";
         const res = await tryInvoke<KeyValidationResponse>("validate_key", { key: keyToTry.trim(), hwid });
         
         if (res && res.status === "valid") {
