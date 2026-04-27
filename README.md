@@ -44,10 +44,7 @@ The DLL and Injector are built using Visual Studio 2022 (v143 toolset). Ensure `
 
 *   **Lead Dev & Owner**: Bits
 *   **Dev & Admin**: Danni
-*   **Co-Owner**: Deniz
-*   **Administrator**: Kairo
 *   **Helpers**: Quinn, sndr
-*   **Tester**: Emir
 
 ## 🔗 Links
 
