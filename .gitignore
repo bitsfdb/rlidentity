@@ -22,3 +22,68 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment
+.env
+.env.*
+
+# Node / package managers
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+.turbo
+
+# Vite / build caches
+.vite/
+.cache/
+dist/
+build/
+
+# TypeScript
+*.tsbuildinfo
+
+# Tauri / Rust
+src-tauri/target/
+target/
+/dist/tauri
+
+# CMake / build artifacts
+build/
+build-x64/
+cmake-build-debug/
+CMakeFiles/
+bin/
+lib/
+Debug/
+Release/
+*.obj
+*.o
+*.lib
+*.a
+*.dll
+*.so
+*.dylib
+*.exe
+*.pdb
+*.ilk
+
+# Visual Studio
+.vs/
+bin/
+obj/
+*.user
+*.userosscache
+*.VC.db
+*.VC.VC.opendb
+
+# IDEs
+.idea/
+*.sublime-workspace
+
+# Misc
+.DS_Store
+Thumbs.db
+
+# Logs again (catch-all)
+*.log
+
