@@ -1,0 +1,39 @@
+# Visual Studio Junk
+.vs/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+*.user
+*.suo
+*.db
+*.opendb
+
+# Build Artifacts
+*.obj
+*.log
+*.tlog
+*.lastbuildstate
+*.idb
+*.pdb
+*.pch
+*.res
+*.iobj
+*.ipdb
+*.ipch
+
+# CMake Noise
+build/
+build-x64/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CMakeScripts/
+Testing/
+node_modules/
+
+# Project Specifics
+RLIdentity.dll
+RLIdentity.lib
+RLIdentity.exp
+config.json

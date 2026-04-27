@@ -1,0 +1,4 @@
+[submodule "GUI"]
+	path = GUI
+	url = https://git.rlidentity.me/bits/RLidentity.git
+	branch = GUI
