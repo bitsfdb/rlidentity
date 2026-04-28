@@ -1,6 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import { invoke } from '@tauri-apps/api/core';
-const [version, setVersion] = useState('');
+
 type Status =
   | "ready"
   | "saved successfully"
@@ -13,11 +12,11 @@ type Status =
   | string;
 
 interface UserInfo {
-  userId: string | null;
-  discordId: string | null;
-  epicId: string | null;
+  user_id: string | null;
+  discord_id: string | null;
+  epic_id: string | null;
   username: string | null;
-  globalName: string | null;
+  global_name: string | null;
   logins?: number;
 }
 
@@ -89,7 +88,7 @@ export default function App() {
   const initialAutoInject = useMemo(() => localStorage.getItem(LS_KEYS.autoInject) === "true", []);
   const initialTheme      = useMemo(() => (localStorage.getItem(LS_KEYS.theme) ?? "phantom") as ThemeId, []);
   const [version, setVersion]              = useState(''); 
-  const [apiKey, setApiKey]               = useState(initialApiKey);
+  const [apiKey, setApiKey]                = useState(initialApiKey);
   const [spoofedUsername, setSpoofedUsername] = useState(initialSpoofed);
   const [isAuthorized, setIsAuthorized]   = useState(false);
   const [isRevoked, setIsRevoked]         = useState(false);
@@ -245,7 +244,7 @@ export default function App() {
   async function inject() {
     setStatus("injecting...");
     try {
-      const res = await tryInvoke<string>("inject_dll", { discordId: userData?.discordId });
+      const res = await tryInvoke<string>("inject_dll", { discordId: userData?.discord_id });
       setLastLog(res || "Successfully Injected!");
       setStatus("Successfully Injected!");
       window.setTimeout(() => setStatus("ready"), 1400);
@@ -394,9 +393,9 @@ export default function App() {
       <main className="panel-wrap">
         <header className="welcome-section">
           <h2 className="welcome-text">
-            Welcome, <span className="neon-text-soft">{userData?.globalName || userData?.username || "User"}</span>
+            Welcome, <span className="neon-text-soft">{userData?.global_name || userData?.username || "User"}</span>
           </h2>
-          <div className="user-id-badge">User #{userData?.userId || "0"}</div>
+          <div className="user-id-badge">User #{userData?.user_id || "0"}</div>
         </header>
 
         <section className="glass-card neon-ring">
@@ -457,7 +456,7 @@ export default function App() {
                 <h2 className="modal-title neon-text-soft">System Credits</h2>
                 <div className="credits-grid glass-input">
                   {[
-                    { role: "Lead Dev & Owner", name: "Bits",        accent: true },
+                    { role: "Lead Dev & Owner", name: "Bits",       accent: true },
                     { role: "Dev & Admin",      name: "Danni" },
                     { role: "Co-Owner",         name: "Deniz" },
                     { role: "Administrator",    name: "Kairo" },
