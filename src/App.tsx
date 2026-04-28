@@ -138,8 +138,19 @@ export default function App() {
   useEffect(() => {
     if (initialApiKey) authorize(initialApiKey);
     syncAssetsAndCheckUpdates();
-    tryInvoke("get_app_version").then(v => setVersion(v as string));
+    loadAppVersion();
   }, []);
+
+  async function loadAppVersion() {
+    if (!isTauriRuntime()) return;
+    try {
+      const app = await import("@tauri-apps/api/app");
+      setVersion(await app.getVersion());
+    } catch (e) {
+      console.error("Failed to get app version:", e);
+      setVersion("");
+    }
+  }
 
   async function syncAssetsAndCheckUpdates() {
   if (!isTauriRuntime()) return;
@@ -244,7 +255,7 @@ export default function App() {
   async function inject() {
     setStatus("injecting...");
     try {
-      const res = await tryInvoke<string>("inject_dll", { discordId: userData?.discord_id });
+      const res = await tryInvoke<string>("inject_dll");
       setLastLog(res || "Successfully Injected!");
       setStatus("Successfully Injected!");
       window.setTimeout(() => setStatus("ready"), 1400);

@@ -37,6 +37,13 @@ pub struct KeyValidationResponse {
     pub user: Option<UserInfo>,
 }
 
+#[derive(Serialize, Deserialize)]
+struct SaveConfigPayload {
+    #[serde(rename = "spoofedName")]
+    name: String,
+    platform: String,
+}
+
 #[derive(Deserialize)]
 struct AssetManifest {
     injector_hash: String,
@@ -64,7 +71,7 @@ async fn get_last_epic_id(base_path: &Path) -> String {
 
 // --- commands ---
 
-#[tauri::command]
+#[tauri::command(rename_all = "snake_case")]
 fn get_hwid() -> String {
     let output = Command::new("reg")
         .args(["query", r"HKLM\SOFTWARE\Microsoft\Cryptography", "/v", "MachineGuid"])
@@ -78,11 +85,10 @@ fn get_hwid() -> String {
             }
         }
     }
-    // strictly avoid returning "unknown" to prevent key sharing bypasses
     "00000000-0000-0000-0000-000000000000".to_string()
 }
 
-#[tauri::command]
+#[tauri::command(rename_all = "snake_case")]
 async fn validate_key(
     key: String, 
     hwid: String, 
@@ -101,18 +107,19 @@ async fn validate_key(
         .map_err(|e| format!("api schema mismatch: {}", e))
 }
 
-#[tauri::command]
+#[tauri::command(rename_all = "snake_case")]
 async fn inject_dll(state: State<'_, AppState>) -> Result<String, String> {
     let injector_path = state.app_data.join("injector.exe");
     let dll_path = state.app_data.join("RLIdentity.dll");
     
-    {
+    let is_running = {
         let mut sys = state.sys.lock().unwrap();
-        // fix: use refresh_processes_specifics and add the remove_dead_processes bool
-sys.refresh_processes_specifics(ProcessRefreshKind::new());        
-        if sys.processes_by_exact_name("RocketLeague.exe").next().is_none() {
-            return Err("rocket league is not running".into());
-        }
+        sys.refresh_processes_specifics(ProcessRefreshKind::new());         
+        let x = sys.processes_by_exact_name("RocketLeague.exe").next().is_some(); x
+    };
+    
+    if !is_running {
+        return Err("rocket league is not running".into());
     }
 
     if !injector_path.exists() || !dll_path.exists() {
@@ -132,11 +139,10 @@ sys.refresh_processes_specifics(ProcessRefreshKind::new());
     }
 }
 
-#[tauri::command]
+#[tauri::command(rename_all = "snake_case")]
 async fn download_assets(state: State<'_, AppState>) -> Result<(), String> {
     fs::create_dir_all(&state.app_data).await.map_err(|e| e.to_string())?;
 
-    // dynamically fetch latest hashes to avoid brittle hardcoding
     let manifest: AssetManifest = state.client.get("https://api.rlidentity.me/manifest")
         .send().await.map_err(|e| e.to_string())?
         .json().await.map_err(|e| e.to_string())?;
@@ -164,29 +170,36 @@ async fn download_assets(state: State<'_, AppState>) -> Result<(), String> {
     Ok(())
 }
 
-#[tauri::command]
+#[tauri::command(rename_all = "snake_case")]
 async fn check_status(state: State<'_, AppState>) -> Result<Status, String> {
-    let mut sys = state.sys.lock().unwrap();
-    // fix: use refresh_processes_specifics and add the remove_dead_processes bool
-sys.refresh_processes_specifics(ProcessRefreshKind::new());    
-    let is_running = sys.processes_by_exact_name("RocketLeague.exe").next().is_some();
+    let is_running = {
+        let mut sys = state.sys.lock().unwrap();
+        sys.refresh_processes_specifics(ProcessRefreshKind::new());
+        let x = sys.processes_by_exact_name("RocketLeague.exe").next().is_some(); x
+    };
+    
     Ok(Status { is_running, is_injected: false })
 }
 
-#[tauri::command]
-async fn save_config(config_data: String, state: State<'_, AppState>) -> Result<(), String> {
+#[tauri::command(rename_all = "snake_case")]
+async fn save_config(name: String, platform: String, state: State<'_, AppState>) -> Result<(), String> {
     let config_path = state.app_data.join("config.json");
-    let temp_path = state.app_data.join("config.json.tmp");
+    let payload = SaveConfigPayload { name, platform };
+    
+    if !state.app_data.exists() {
+        fs::create_dir_all(&state.app_data).await.map_err(|e| e.to_string())?;
+    }
 
-    // atomic write: write to tmp then rename to prevent corruption on crash
-    fs::write(&temp_path, config_data).await.map_err(|e| e.to_string())?;
-    fs::rename(temp_path, config_path).await.map_err(|e| e.to_string())
+    let json = serde_json::to_string(&payload).map_err(|e| e.to_string())?;
+    fs::write(config_path, json).await.map_err(|e| e.to_string())
 }
-#[tauri::command]
+
+#[tauri::command(rename_all = "snake_case")]
 fn get_app_version(app: tauri::AppHandle) -> String {
     app.package_info().version.to_string()
 }
-#[tauri::command]
+
+#[tauri::command(rename_all = "snake_case")]
 fn minimize_to_tray(window: WebviewWindow) {
     let _ = window.hide();
 }
@@ -222,26 +235,29 @@ pub fn run() {
             #[cfg(target_os = "windows")]
             apply_acrylic(&window, Some((18, 18, 18, 125))).ok();
 
-            let handle = app.handle().clone();
-            let tray_menu = tauri::menu::Menu::with_items(app, &[
-                &tauri::menu::MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?,
-            ])?;
+            let monitor_handle = app.handle().clone();
+            tauri::async_runtime::spawn(async move {
+                let mut last_seen_running = false;
+                loop {
+                    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
+                    
+                    let state = monitor_handle.state::<AppState>();
+                    let is_running = {
+                        let mut sys = state.sys.lock().unwrap();
+                        sys.refresh_processes_specifics(ProcessRefreshKind::new());
+                        let x = sys.processes_by_exact_name("RocketLeague.exe").next().is_some(); x
+                    };
 
-            let _ = tauri::tray::TrayIconBuilder::new()
-                .icon(app.default_window_icon().unwrap().clone())
-                .menu(&tray_menu)
-                .on_menu_event(move |_app, event| {
-                    if event.id().as_ref() == "quit" { handle.exit(0); }
-                })
-                .on_tray_icon_event(|tray, event| {
-                    if let tauri::tray::TrayIconEvent::Click { button: tauri::tray::MouseButton::Left, .. } = event {
-                        let _ = tray.app_handle().get_webview_window("main").unwrap().show();
+                    if is_running && !last_seen_running {
+                        println!("auto-detect: rocket league started. injecting...");
+                        let _ = inject_dll(state).await;
                     }
-                })
-                .build(app)?;
+                    last_seen_running = is_running;
+                }
+            });
 
             Ok(())
         })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
-} 
+}

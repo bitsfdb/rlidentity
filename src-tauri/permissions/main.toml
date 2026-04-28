@@ -13,5 +13,6 @@ commands.allow = [
     "inject_dll",
     "validate_key",
     "check_status",
-    "get_hwid"
+    "get_hwid",
+    "download_assets"
 ]
