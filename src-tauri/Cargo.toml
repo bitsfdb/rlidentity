@@ -1,8 +1,8 @@
 [package]
-name = "rlidentitygui"
-version = "2.0.0"
-description = "A Tauri App"
-authors = ["you"]
+name = "RLIdentity"
+version = "2.0.1"
+description = "check out https://rlidentity.me for more info!"
+authors = ["bits", "danni :3"]
 edition = "2021"
 
 [lib]
