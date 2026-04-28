@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "rlidentitygui",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "identifier": "me.rlidentity.gui",
   "build": {
     "beforeDevCommand": "npm run dev",
@@ -32,12 +32,16 @@
       "endpoints": [
         "https://api.rlidentity.me/version"
       ],
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEY5QkIxRTlEOEVENDRCNDcKUldSSFM5U09uUjY3K1VzZUg1ek52bnNuTmZDckhsN3k3WHlEMXhMTUFYSC9HUnlxL1ZYekhFU28K" 
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEFGNUM0MTdBMUQxQTBBQzUKUldURkNob2Rla0Zjcng4TWxpSWh3QVhlQ2xFZnRZUE5Ock1KQmk0T3ZkV25EQ1R2dWZrNWZPNUEK" 
     }
   },
-  "bundle": {
+"bundle": {
     "active": true,
     "targets": "all",
+    "resources": [
+      "E:\\projects\\Rocket League\\RLIdentityDLL\\injector.exe",
+      "E:\\projects\\Rocket League\\RLIdentityDLL\\RLIdentity.dll"
+    ],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

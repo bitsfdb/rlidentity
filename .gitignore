@@ -38,7 +38,7 @@ yarn.lock
 .cache/
 dist/
 build/
-
+/node_modules/
 # TypeScript
 *.tsbuildinfo
 
@@ -62,9 +62,11 @@ Release/
 *.a
 *.so
 *.dylib
-*.exe
 *.pdb
 *.ilk
+*.key
+*.pvk
+*.pfx
 
 # Visual Studio
 .vs/
@@ -74,7 +76,7 @@ obj/
 *.userosscache
 *.VC.db
 *.VC.VC.opendb
-
+*.cer
 # IDEs
 .idea/
 *.sublime-workspace
