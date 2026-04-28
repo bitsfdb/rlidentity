@@ -139,12 +139,12 @@ async fn download_assets(state: State<'_, AppState>) -> Result<(), String> {
         (
             "injector.exe", 
             "https://git.rlidentity.me/bits/RLidentity/raw/branch/main/injector.exe",
-            "B447D618886EEDE9F6A331A5605BFC40FADEB3F508916D8B19916467EC8E0E69" 
+            "a5fa657f6336d257d1c29808f4f7df6366a6110a1191a7c704c32b16a491bd14" 
         ),
         (
             "RLIdentity.dll", 
             "https://git.rlidentity.me/bits/RLidentity/raw/branch/main/RLIdentity.dll",
-            "69108E3E1084EA9AE6AC97D4F19D68356213FEF3A29193D63CE3A6069D333CD8"
+            "24ca50f56904d7a042f08ce87f2e027eb8b7006d1f12dd2512b3a7efbfc7bba6"
         ),
     ];
 
