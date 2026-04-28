@@ -182,7 +182,10 @@ async fn save_config(config_data: String, state: State<'_, AppState>) -> Result<
     fs::write(&temp_path, config_data).await.map_err(|e| e.to_string())?;
     fs::rename(temp_path, config_path).await.map_err(|e| e.to_string())
 }
-
+#[tauri::command]
+fn get_app_version(app: tauri::AppHandle) -> String {
+    app.package_info().version.to_string()
+}
 #[tauri::command]
 fn minimize_to_tray(window: WebviewWindow) {
     let _ = window.hide();
@@ -210,7 +213,8 @@ pub fn run() {
             check_status,
             get_hwid,
             download_assets,
-            save_config
+            save_config,
+            get_app_version
         ])
         .setup(|app| {
             let window = app.get_webview_window("main").unwrap();
