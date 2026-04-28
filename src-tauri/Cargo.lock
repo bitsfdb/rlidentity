@@ -3457,9 +3457,11 @@ name = "rlidentitygui"
 version = "2.0.0"
 dependencies = [
  "dirs 5.0.1",
+ "hex",
  "reqwest 0.12.28",
  "serde",
  "serde_json",
+ "sha2",
  "sysinfo",
  "tauri",
  "tauri-build",

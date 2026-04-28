@@ -60,7 +60,6 @@ Release/
 *.o
 *.lib
 *.a
-*.dll
 *.so
 *.dylib
 *.exe
