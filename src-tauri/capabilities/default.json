@@ -14,6 +14,6 @@
     "opener:default",
     "updater:default",
     "process:allow-restart",
-    "default"
+    "allow-main-commands" 
   ]
 }
