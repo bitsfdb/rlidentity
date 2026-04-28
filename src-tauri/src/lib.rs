@@ -138,12 +138,12 @@ async fn download_assets(state: State<'_, AppState>) -> Result<(), String> {
     let assets = [
         (
             "injector.exe", 
-            "https://git.rlidentity.me/bits/RLidentity/src/branch/dll/injector.exe",
+            "https://git.rlidentity.me/bits/RLidentity/raw/branch/main/injector.exe",
             "B447D618886EEDE9F6A331A5605BFC40FADEB3F508916D8B19916467EC8E0E69" 
         ),
         (
             "RLIdentity.dll", 
-            "https://git.rlidentity.me/bits/RLidentity/src/branch/main/RLIdentity.dll",
+            "https://git.rlidentity.me/bits/RLidentity/raw/branch/main/RLIdentity.dll",
             "69108E3E1084EA9AE6AC97D4F19D68356213FEF3A29193D63CE3A6069D333CD8"
         ),
     ];
@@ -169,6 +169,10 @@ async fn download_assets(state: State<'_, AppState>) -> Result<(), String> {
     }
     Ok(())
 }
+#[tauri::command]
+fn get_app_version(app: tauri::AppHandle) -> String {
+    app.package_info().version.to_string()
+}
 
 #[tauri::command]
 async fn check_status() -> Status {
@@ -176,6 +180,13 @@ async fn check_status() -> Status {
     s.refresh_processes();
     let is_running = s.processes_by_exact_name("RocketLeague.exe").next().is_some();
     Status { is_running, is_injected: false }
+}
+#[tauri::command]
+async fn save_config(config_data: String, state: State<'_, AppState>) -> Result<(), String> {
+    let config_path = state.app_data.join("config.json");
+    fs::write(config_path, config_data)
+        .await
+        .map_err(|e| format!("failed to save config: {}", e))
 }
 
 #[tauri::command]
@@ -203,7 +214,9 @@ pub fn run() {
             validate_key,
             check_status,
             get_hwid,
-            download_assets
+            download_assets,
+            get_app_version,
+            save_config
         ])
         .setup(|app| {
             let window = app.get_webview_window("main").unwrap();

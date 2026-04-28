@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
-
+import { invoke } from '@tauri-apps/api/core';
+const [version, setVersion] = useState('');
 type Status =
   | "ready"
   | "saved successfully"
@@ -87,7 +88,7 @@ export default function App() {
   const initialPlatform   = useMemo(() => localStorage.getItem(LS_KEYS.platform) ?? "Epic", []);
   const initialAutoInject = useMemo(() => localStorage.getItem(LS_KEYS.autoInject) === "true", []);
   const initialTheme      = useMemo(() => (localStorage.getItem(LS_KEYS.theme) ?? "phantom") as ThemeId, []);
-
+  const [version, setVersion]              = useState(''); 
   const [apiKey, setApiKey]               = useState(initialApiKey);
   const [spoofedUsername, setSpoofedUsername] = useState(initialSpoofed);
   const [isAuthorized, setIsAuthorized]   = useState(false);
@@ -138,17 +139,21 @@ export default function App() {
   useEffect(() => {
     if (initialApiKey) authorize(initialApiKey);
     syncAssetsAndCheckUpdates();
+    tryInvoke("get_app_version").then(v => setVersion(v as string));
   }, []);
 
   async function syncAssetsAndCheckUpdates() {
-    if (!isTauriRuntime()) return;
-    try {
-      await tryInvoke("download_assets");
-    } catch (e) {
-      console.error("Failed to sync assets:", e);
-    }
-    checkForUpdates();
+  if (!isTauriRuntime()) return;
+  try {
+    setStatus("syncing assets...");
+    await tryInvoke("download_assets");
+    setStatus("ready");
+  } catch (e) {
+    console.error("Failed to sync assets:", e);
+    setStatus("Sync Error: " + String(e));
   }
+  checkForUpdates();
+}
 
   async function checkForUpdates() {
     if (!isTauriRuntime()) return;
@@ -300,9 +305,11 @@ export default function App() {
               style={{ cursor: "default" }}
             />
             <div className="titlebar-text" data-tauri-drag-region>
-              <div className="app-name neon-text-soft">
-                RLidentity <span style={{ fontSize: "10px", opacity: 0.6, marginLeft: "4px" }}>v2.0.0</span>
-              </div>
+<div className="app-name neon-text-soft">
+  RLidentity <span style={{ fontSize: "10px", opacity: 0.6, marginLeft: "4px" }}>
+    v{version || "2.0.1"} 
+  </span>
+</div>
               <div className="app-slogan">{isRevoked ? "License Revoked" : "Authorize to continue"}</div>
             </div>
           </div>
